@@ -22,8 +22,17 @@ export default function Main() {
     )
   })
 
-  function log() {
-    console.log(dice)
+  function roll() {
+    const updatedDice = dice.map((die) => {
+      if (die.isFrozen) {
+        return die
+      }
+
+      const newValue = Math.floor(Math.random() * 6) + 1
+      return { ...die, value: newValue }
+    })
+
+    setDice(updatedDice)
   }
 
   return (
@@ -31,7 +40,7 @@ export default function Main() {
       <h2 className={karla700.className}>Tenzies</h2>
       <p>Roll until all dice are the same. Click each die to freeze it at its current value between rolls</p>
       <div className="dice-container">{diceButtons}</div>
-      <button className={`btn-roll ${karla700.className}`}>Roll</button>
+      <button className={`btn-roll ${karla700.className}`} onClick={roll}>Roll</button>
     </main>
   )
 }
