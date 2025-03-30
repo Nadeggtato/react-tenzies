@@ -1,6 +1,6 @@
 import Die from "@/types/die";
 import { Karla } from "next/font/google";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const karla700 = Karla({ subsets: ['latin'], weight: '700' })
 const karla400 = Karla({ subsets: ['latin'], weight: '400' })
@@ -18,9 +18,28 @@ export default function Main() {
 
   const diceButtons = dice.map((die: Die) => {
     return (
-      <div key={die.id} className={`dice ${karla700.className} ${die.isFrozen && 'frozen'}`}>{ die.value }</div>
+      <button key={die.id}
+        className={`dice ${karla700.className} ${die.isFrozen && 'frozen'}`}
+        data-key={die.id}
+        onClick={toggleFreeze}>
+        { die.value }
+      </button>
     )
   })
+
+
+  function toggleFreeze(event: React.MouseEvent<HTMLButtonElement>) {
+    const index = Number(event.currentTarget.getAttribute('data-key'))
+    const updatedDice = dice.map((die) => {
+      if (die.id !== index) {
+        return die
+      }
+
+      return { ...die, isFrozen: !die.isFrozen }
+    })
+
+    setDice(updatedDice)
+  }
 
   function roll() {
     const updatedDice = dice.map((die) => {

@@ -43,7 +43,7 @@ main > h2 {
   margin-bottom: 10px;
 }
 
-div.dice {
+button.dice {
   box-shadow: 0px 2px 2px 0px #00000026;
   width: 35px;
   height: 35px;
@@ -53,9 +53,12 @@ div.dice {
   align-items: center;
   border-radius: 4px;
   cursor: pointer;
+  background-color: white;
+  border: none;
+  color: #2B283A;
 }
 
-div.dice.frozen {
+button.dice.frozen {
   background-color: #59E391;
 }
 
@@ -75,4 +78,5 @@ button.btn-roll {
   margin-top: 10px;
   border-radius: 4px;
   font-size: 16px;
+  cursor: pointer;
 }
