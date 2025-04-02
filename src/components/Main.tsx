@@ -1,13 +1,39 @@
 import Die from "@/types/die";
 import { Karla } from "next/font/google";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { useWindowSize } from "@react-hook/window-size";
+import ReactConfetti from "react-confetti";
+import { count } from "console";
 
 const karla700 = Karla({ subsets: ['latin'], weight: '700' })
 const karla400 = Karla({ subsets: ['latin'], weight: '400' })
 const DIE_COUNT = 10
 
 export default function Main() {
-  const [dice, setDice] = useState<Array<Die>>([])
+  const [ width, height ] = useWindowSize()
+  const [ dice, setDice ] = useState<Array<Die>>([])
+  const [ hasStarted, setHasStarted ] = useState<boolean>(false)
+
+  const isClear = useMemo(() => {
+    let isSame = false
+    let isFrozen = false
+
+    for (let x = 1; x < dice.length; x++) {
+      isSame = (dice[x].value === dice[x - 1].value)
+
+      if (x === 1) {
+        isFrozen = dice[x-1].isFrozen && dice[x].isFrozen
+      } else {
+        isFrozen = dice[x].isFrozen
+      }
+
+      if (!isSame || !isFrozen) {
+        break
+      }
+    }
+
+    return hasStarted && isSame && isFrozen
+  }, [dice])
 
   useEffect(() => {
     for (let x = 0; x < DIE_COUNT; x++) {
@@ -52,10 +78,12 @@ export default function Main() {
     })
 
     setDice(updatedDice)
+    setHasStarted(true)
   }
 
   return (
     <main className={karla400.className}>
+      { isClear && <ReactConfetti width={width} height={height}/> }
       <h2 className={karla700.className}>Tenzies</h2>
       <p>Roll until all dice are the same. Click each die to freeze it at its current value between rolls</p>
       <div className="dice-container">{diceButtons}</div>
