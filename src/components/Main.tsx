@@ -59,15 +59,17 @@ export default function Main() {
     }
 
     const index = Number(event.currentTarget.getAttribute('data-key'))
-    const updatedDice = dice.map((die) => {
-      if (die.id !== index) {
-        return die
+
+    setDice((prevDice) => {
+      const diceCopy = [...prevDice]
+      const dieIndex = diceCopy.findIndex((die) => die.id === index)
+
+      if (dieIndex !== -1) {
+        diceCopy[dieIndex] = { ...diceCopy[dieIndex], isFrozen: !diceCopy[dieIndex].isFrozen }
       }
 
-      return { ...die, isFrozen: !die.isFrozen }
+      return diceCopy
     })
-
-    setDice(updatedDice)
   }
 
   function roll() {
