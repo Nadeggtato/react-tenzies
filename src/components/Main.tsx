@@ -3,7 +3,6 @@ import { Karla } from "next/font/google";
 import React, { useEffect, useMemo, useState } from "react";
 import { useWindowSize } from "@react-hook/window-size";
 import ReactConfetti from "react-confetti";
-import { count } from "console";
 
 const karla700 = Karla({ subsets: ['latin'], weight: '700' })
 const karla400 = Karla({ subsets: ['latin'], weight: '400' })
