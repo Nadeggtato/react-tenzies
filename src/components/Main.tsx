@@ -13,6 +13,7 @@ export default function Main() {
   const [ width, height ] = useWindowSize()
   const [ dice, setDice ] = useState<Array<Die>>([])
   const [ hasStarted, setHasStarted ] = useState<boolean>(false)
+  const [ rollCount, setRollCount ] = useState<number>(0)
 
   const isClear = useMemo(() => {
     let isSame = false
@@ -55,6 +56,10 @@ export default function Main() {
 
 
   function toggleFreeze(event: React.MouseEvent<HTMLButtonElement>) {
+    if (rollCount <= 0) {
+      return
+    }
+
     const index = Number(event.currentTarget.getAttribute('data-key'))
     const updatedDice = dice.map((die) => {
       if (die.id !== index) {
@@ -79,11 +84,12 @@ export default function Main() {
 
     setDice(updatedDice)
     setHasStarted(true)
+    setRollCount(prevRollCount => prevRollCount + 1)
   }
 
   return (
     <main className={karla400.className}>
-      { isClear && <ReactConfetti width={width} height={height}/> }
+      { rollCount > 0 && isClear && <ReactConfetti width={width} height={height}/> }
       <h2 className={karla700.className}>Tenzies</h2>
       <p>Roll until all dice are the same. Click each die to freeze it at its current value between rolls</p>
       <div className="dice-container">{diceButtons}</div>
