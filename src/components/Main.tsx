@@ -12,7 +12,6 @@ const DIE_COUNT = 10
 export default function Main() {
   const [ width, height ] = useWindowSize()
   const [ dice, setDice ] = useState<Array<Die>>([])
-  const [ hasStarted, setHasStarted ] = useState<boolean>(false)
   const [ rollCount, setRollCount ] = useState<number>(0)
 
   const isClear = useMemo(() => {
@@ -33,7 +32,7 @@ export default function Main() {
       }
     }
 
-    return hasStarted && isSame && isFrozen
+    return rollCount > 0 && isSame && isFrozen
   }, [dice])
 
   useEffect(() => {
@@ -53,7 +52,6 @@ export default function Main() {
       </button>
     )
   })
-
 
   function toggleFreeze(event: React.MouseEvent<HTMLButtonElement>) {
     if (rollCount <= 0) {
@@ -83,8 +81,16 @@ export default function Main() {
     })
 
     setDice(updatedDice)
-    setHasStarted(true)
     setRollCount(prevRollCount => prevRollCount + 1)
+  }
+
+  function reinitialize() {
+    const updatedDice = dice.map((die) => {
+      return { ...die, value: 1, isFrozen: false }
+    })
+
+    setDice(updatedDice)
+    setRollCount(0)
   }
 
   return (
@@ -93,7 +99,9 @@ export default function Main() {
       <h2 className={karla700.className}>Tenzies</h2>
       <p>Roll until all dice are the same. Click each die to freeze it at its current value between rolls</p>
       <div className="dice-container">{diceButtons}</div>
-      <button className={`btn-roll ${karla700.className}`} onClick={roll}>Roll</button>
+      <button className={`btn-roll ${karla700.className}`} onClick={isClear ? reinitialize : roll}>
+        { isClear ? 'New Game' : 'Roll' }
+      </button>
     </main>
   )
 }
